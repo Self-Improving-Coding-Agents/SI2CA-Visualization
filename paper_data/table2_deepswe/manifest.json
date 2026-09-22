@@ -1,0 +1,107 @@
+{
+ "table": "Table 2 - Frontier GPT-5.6 models on DeepSWE v1.1 (113 tasks)",
+ "generated": "2026-09-11",
+ "files": {
+  "gpt56_terra_xhigh/self_judgement/run1/results.jsonl": {
+   "records": 113,
+   "bytes": 54199,
+   "sha256_16": "1c75bd2135a87f87"
+  },
+  "gpt56_terra_xhigh/self_judgement/run1/selection.jsonl.gz": {
+   "records": 7257,
+   "bytes": 15300661,
+   "sha256_16": "6b3b1e50766b0e25"
+  },
+  "gpt56_terra_xhigh/self_judgement/run1/trajectories.jsonl.gz": {
+   "records": 15498,
+   "bytes": 10852886,
+   "sha256_16": "d7921cff44c5192f"
+  },
+  "gpt56_terra_xhigh/self_judgement/run2/results.jsonl": {
+   "records": 113,
+   "bytes": 54199,
+   "sha256_16": "16cd97f4f928764b"
+  },
+  "gpt56_terra_xhigh/self_judgement/run2/selection.jsonl.gz": {
+   "records": 6550,
+   "bytes": 14038609,
+   "sha256_16": "806f4053a4f5b461"
+  },
+  "gpt56_terra_xhigh/self_judgement/run2/trajectories.jsonl.gz": {
+   "records": 16267,
+   "bytes": 11323433,
+   "sha256_16": "ed2cb2de43eb4e33"
+  },
+  "gpt56_terra_xhigh/self_judgement/run3/results.jsonl": {
+   "records": 113,
+   "bytes": 54206,
+   "sha256_16": "c83ec7d304f4f831"
+  },
+  "gpt56_terra_xhigh/self_judgement/run3/selection.jsonl.gz": {
+   "records": 6787,
+   "bytes": 14205372,
+   "sha256_16": "50084ea2ea02336b"
+  },
+  "gpt56_terra_xhigh/self_judgement/run3/trajectories.jsonl.gz": {
+   "records": 16088,
+   "bytes": 10964544,
+   "sha256_16": "98e1d9961806657b"
+  },
+  "gpt56_terra_xhigh/self_judgement/run4/results.jsonl": {
+   "records": 113,
+   "bytes": 54137,
+   "sha256_16": "ed67302d132de416"
+  },
+  "gpt56_terra_xhigh/self_judgement/run4/selection.jsonl.gz": {
+   "records": 6699,
+   "bytes": 14019761,
+   "sha256_16": "3e8d95b1374f57bb"
+  },
+  "gpt56_terra_xhigh/self_judgement/run4/trajectories.jsonl.gz": {
+   "records": 15941,
+   "bytes": 10962549,
+   "sha256_16": "6d21789886334032"
+  },
+  "gpt56_terra_xhigh/standard/run1/results.jsonl": {
+   "records": 113,
+   "bytes": 53486,
+   "sha256_16": "d6aa7469a6bd4772"
+  },
+  "gpt56_terra_xhigh/standard/run1/trajectories.jsonl.gz": {
+   "records": 17107,
+   "bytes": 11221064,
+   "sha256_16": "7e0422c27d8320c7"
+  },
+  "gpt56_terra_xhigh/standard/run2/results.jsonl": {
+   "records": 113,
+   "bytes": 53485,
+   "sha256_16": "cce68a5ec6a576c4"
+  },
+  "gpt56_terra_xhigh/standard/run2/trajectories.jsonl.gz": {
+   "records": 17284,
+   "bytes": 11121605,
+   "sha256_16": "a32745a85d6271e4"
+  },
+  "gpt56_terra_xhigh/standard/run3/results.jsonl": {
+   "records": 113,
+   "bytes": 53482,
+   "sha256_16": "91f08a25e6cfcb5e"
+  },
+  "gpt56_terra_xhigh/standard/run3/trajectories.jsonl.gz": {
+   "records": 17424,
+   "bytes": 11247735,
+   "sha256_16": "ddc3cd5e106579e0"
+  },
+  "gpt56_terra_xhigh/standard/run4/results.jsonl": {
+   "records": 113,
+   "bytes": 53473,
+   "sha256_16": "441670aeb05fd386"
+  },
+  "gpt56_terra_xhigh/standard/run4/trajectories.jsonl.gz": {
+   "records": 17010,
+   "bytes": 11453463,
+   "sha256_16": "8cea3fb6bf81c03d"
+  }
+ },
+ "total_bytes": 147142349
+}

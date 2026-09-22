@@ -1,0 +1,98 @@
+{
+ "source": "paper_export/deepswe_luna_20260911 (exported 2026-09-11)",
+ "upstream_manifest": {
+  "benchmark": "DeepSWE v1.1 (113 tasks)",
+  "model": "gpt-5.6-luna",
+  "channel": "GitHub Copilot API, /responses route (SHIM_UPSTREAM unset; copilot default)",
+  "policy_effort": "max",
+  "max_output_tokens": 65536,
+  "per_task_budget": "Unlimited (BUDGET=-1, effective cap 200000s)",
+  "turn_limit": 1000,
+  "arms": {
+   "standard": {
+    "runs": 1,
+    "solved": 68,
+    "total": 113,
+    "resolve_rate": 0.6018,
+    "turns_mean": 246.8,
+    "turns_median": 173,
+    "turns_p90": 465,
+    "driver": "ds_minimal_driver.py",
+    "conc": 8,
+    "run_dir": "ds_luna_max"
+   },
+   "self_judgement": {
+    "runs": 1,
+    "solved": 73,
+    "total": 113,
+    "resolve_rate": 0.646,
+    "turns_mean": 223.0,
+    "turns_median": 150,
+    "turns_p90": 474,
+    "judge_model": "gpt-5.6-luna",
+    "judge_effort": "max",
+    "judge_max_tokens": 32768,
+    "k": 2,
+    "score_samples_per_candidate": 2,
+    "G1_weight": 0.3,
+    "rubrics": [
+     "R1",
+     "R2",
+     "R3",
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "G1"
+    ],
+    "driver": "ds_selfguide_g1_driver.py",
+    "note": "Four parallel drivers completed the same arm using separate directories and shims; records were deduplicated by task. provenance_task_to_driver.json records each task source.",
+    "run_dirs": [
+     "ds_luna_sg_g1(conc8)",
+     "ds_luna_sg_g1b(conc6)",
+     "ds_luna_sg_g1c(conc8)",
+     "ds_luna_sg_g1d(conc2)"
+    ]
+   }
+  },
+  "grading": "All 113 tasks have grade_status=OK, with no GRADEFAIL/TIMEOUT; denominator 113, no tasks excluded",
+  "paired_2x2": {
+   "both": 54,
+   "only_self_judgement": 19,
+   "only_standard": 14,
+   "neither": 26,
+   "mcnemar_exact_two_sided": 0.4869
+  },
+  "machine": "H100 node",
+  "export_date": "2026-09-11"
+ },
+ "recomputed": {
+  "standard": {
+   "tasks": 113,
+   "solved": 68,
+   "turns_mean": 246.8,
+   "turns_median": 173,
+   "turns_p90_recomputed": 551,
+   "turns_p90_as_reported": 465,
+   "records": {
+    "results.jsonl": 113,
+    "trajectories.jsonl.gz": 113,
+    "selection.jsonl.gz": 0
+   }
+  },
+  "self_judgement": {
+   "tasks": 113,
+   "solved": 73,
+   "turns_mean": 223.0,
+   "turns_median": 150,
+   "turns_p90_recomputed": 485,
+   "turns_p90_as_reported": 474,
+   "records": {
+    "results.jsonl": 113,
+    "trajectories.jsonl.gz": 113,
+    "selection.jsonl.gz": 25204
+   }
+  }
+ },
+ "note": "policy and judge both ran at max effort, unlike the Terra runs (xhigh policy, medium and xhigh judge); the effort is carried per record. Each arm ran once, so these rows have no run-to-run spread. P90 as recomputed over all 113 tasks differs from the value the producing session reported; both are kept here."
+}

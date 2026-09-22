@@ -1,0 +1,112 @@
+{
+ "table": "Table 1 - Main results (SWE-bench Verified 500, SWE-bench Pro 731)",
+ "generated": "2026-09-11",
+ "files": {
+  "qwen122b_self_judgement/selection_swebench_pro_python.jsonl.gz": {
+   "records": 20642,
+   "bytes": 33940586,
+   "sha256_16": "63824a6d6b7e3fa2"
+  },
+  "qwen122b_self_judgement/selection_swebench_verified.part1of2.jsonl.gz": {
+   "records": 23588,
+   "bytes": 37583262,
+   "sha256_16": "f7aa4212df5beb7c"
+  },
+  "qwen122b_self_judgement/selection_swebench_verified.part2of2.jsonl.gz": {
+   "records": 23588,
+   "bytes": 36772420,
+   "sha256_16": "f73080ca13253f79"
+  },
+  "qwen122b_self_judgement/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 173122,
+   "sha256_16": "2a43dddaf5daa084"
+  },
+  "qwen122b_self_judgement/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 125756,
+   "sha256_16": "57ab4ef049fbb103"
+  },
+  "qwen122b_self_judgement/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 191925,
+   "sha256_16": "ba1ad670be2ca85d"
+  },
+  "qwen122b_self_likelihood/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 173554,
+   "sha256_16": "c932a23ae324160a"
+  },
+  "qwen122b_self_likelihood/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 126661,
+   "sha256_16": "39e9d9d8b196ed20"
+  },
+  "qwen122b_self_likelihood/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 342183,
+   "sha256_16": "0c618cce1f51704f"
+  },
+  "qwen122b_standard/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 170408,
+   "sha256_16": "848cab3ea9d13931"
+  },
+  "qwen122b_standard/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 122045,
+   "sha256_16": "ceaabaffef2c878a"
+  },
+  "qwen122b_standard/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 192681,
+   "sha256_16": "98aecd35a3d8a345"
+  },
+  "qwen35b_self_judgement/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 172203,
+   "sha256_16": "1f46772c6b71a805"
+  },
+  "qwen35b_self_judgement/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 197613,
+   "sha256_16": "5b1ba5c718e87bb1"
+  },
+  "qwen35b_self_judgement/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 324832,
+   "sha256_16": "65508e80eff32659"
+  },
+  "qwen35b_self_likelihood/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 172735,
+   "sha256_16": "a2ad96fb2543cbd8"
+  },
+  "qwen35b_self_likelihood/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 132317,
+   "sha256_16": "5e566d3a875e3df3"
+  },
+  "qwen35b_self_likelihood/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 202298,
+   "sha256_16": "c921686e638f5835"
+  },
+  "qwen35b_standard/swebench_pro_nonpython.jsonl": {
+   "records": 465,
+   "bytes": 169478,
+   "sha256_16": "41c59140d6fe224c"
+  },
+  "qwen35b_standard/swebench_pro_python.jsonl": {
+   "records": 266,
+   "bytes": 193246,
+   "sha256_16": "961288e242a8b4f4"
+  },
+  "qwen35b_standard/swebench_verified.jsonl": {
+   "records": 500,
+   "bytes": 316692,
+   "sha256_16": "98d8780a02762e8f"
+  }
+ },
+ "total_bytes": 111796017
+}

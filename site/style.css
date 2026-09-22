@@ -1,0 +1,241 @@
+/* Light, roomy, watercolour accents. */
+:root{
+  --ink:#16151a; --ink2:#5f5c69; --ink3:#8f8b99; --line:#ece9e4; --line2:#dcd8d1;
+  --bg:#ffffff; --surface:#fbfaf8; --panel:#ffffff;
+  --pink:#f2b8c6; --yellow:#f5d98b; --green:#a8d5b5; --blue:#a9c7ea; --orange:#f3c39a;
+  --pink-d:#b8475f; --yellow-d:#9c7418; --green-d:#2f7a4e; --blue-d:#2f639c;
+  --good:#2f7a4e; --bad:#b8475f;
+  --shadow:0 1px 2px rgba(20,18,25,.04), 0 8px 24px rgba(20,18,25,.05);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  font:15px/1.6 "Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif}
+.mono,code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+
+/* ---------- top bar ---------- */
+.topbar{border-bottom:1px solid var(--line);background:rgba(255,255,255,.86);backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:20}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:650;letter-spacing:-.015em}
+.brand .logo{width:38px;height:38px;display:block;border-radius:8px}
+.topbar .spacer{flex:1}
+.topbar nav{display:flex;gap:4px}
+.topbar nav button{border:0;background:none;font:inherit;color:var(--ink2);padding:7px 13px;border-radius:999px;cursor:pointer}
+.topbar nav button:hover{background:var(--surface);color:var(--ink)}
+.topbar nav button.on{background:var(--ink);color:#fff}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:72px 0 54px;border-bottom:1px solid var(--line)}
+.hero .blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.5;pointer-events:none}
+.hero .b1{width:420px;height:420px;background:var(--pink);top:-160px;left:-60px}
+.hero .b2{width:380px;height:380px;background:var(--yellow);top:-120px;left:300px}
+.hero .b3{width:420px;height:420px;background:var(--blue);top:-180px;right:120px}
+.hero .b4{width:340px;height:340px;background:var(--green);top:-90px;right:-80px}
+/* the title scales with the viewport so it stays on one line across the full width */
+.hero h1{position:relative;font-size:clamp(26px,3.4vw,48px);line-height:1.1;letter-spacing:-.03em;margin:0 0 16px;font-weight:700}
+.hero p{position:relative;font-size:17px;color:var(--ink2);margin:0}
+
+/* ---------- section ---------- */
+section.block{padding:46px 0}
+section.block + section.block{border-top:1px solid var(--line)}
+h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 16px;font-weight:600}
+h3{font-size:20px;letter-spacing:-.02em;margin:0 0 6px;font-weight:650}
+.lead{color:var(--ink2);margin:0 0 22px}
+#pairTitle{margin-bottom:22px}
+
+/* ---------- promo video ---------- */
+#promo{padding:40px 0}
+/* the frame is as wide as the text column above it; the video fills it edge to edge (16:9, no letterbox) */
+.promo{aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--panel);
+  box-shadow:var(--shadow)}
+.promo video{display:block;width:100%;height:100%;object-fit:cover}
+#promo.hidden{display:none}
+
+/* ---------- pickers ---------- */
+.models{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mcard{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  cursor:pointer;font:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+.mcard:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
+.mcard.on{border-color:var(--ink);box-shadow:var(--shadow)}
+.mcard .fam{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.mcard .name{font-size:17px;font-weight:650;letter-spacing:-.02em;margin:3px 0 0}
+.mcard .swatch{height:4px;border-radius:99px;margin-bottom:12px;width:46px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pill-btn{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 15px;cursor:pointer;
+  font:inherit;font-size:13.5px;color:var(--ink2)}
+.pill-btn:hover{border-color:var(--line2);color:var(--ink)}
+.pill-btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ---------- strategy cards ---------- */
+.strats{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.scard .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.scard .nm{font-weight:650;letter-spacing:-.01em}
+.scard .blurb{color:var(--ink2);font-size:12.5px;line-height:1.5;margin:6px 0 16px;min-height:3em}
+.acc .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
+.big{font-size:40px;font-weight:700;letter-spacing:-.035em;line-height:1}
+.big small{font-size:15px;font-weight:500;color:var(--ink3);letter-spacing:0;margin-left:4px}
+.delta{font-size:13px;font-weight:600;white-space:nowrap}
+.delta.up{color:var(--good)} .delta.dn{color:var(--bad)}
+.kv{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin-top:16px;font-size:13.5px}
+.kv .k{color:var(--ink3)}
+.kv .v{font-variant-numeric:tabular-nums;text-align:right}
+.scard .open{margin-top:18px;font:inherit;font-size:13px;padding:6px 14px;border-radius:999px;border:1px solid var(--line2);
+  background:var(--panel);color:var(--ink2);cursor:pointer}
+.scard .open:hover{border-color:var(--ink);color:var(--ink)}
+
+/* ---------- tables ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 16px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:13.5px}
+th{font-weight:600;color:var(--ink3);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface)}
+td.num,th.num{text-align:right}
+tbody tr.rowlink{cursor:pointer}
+.ok{color:var(--good);font-weight:600} .no{color:var(--ink3)}
+a.tlink{color:var(--blue-d);text-decoration:none}
+a.tlink:hover{text-decoration:underline}
+.muted{color:var(--ink3)}
+.tasks{margin-top:14px}
+
+/* ---------- controls ---------- */
+.controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.controls label{display:flex;gap:8px;align-items:center;color:var(--ink3);font-size:13px}
+select,input{font:inherit;font-size:13.5px;padding:7px 11px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink)}
+select{max-width:min(460px,calc(100vw - 110px))}
+input{min-width:230px}
+button.go{font:inherit;font-size:13.5px;padding:7px 17px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+button.go:hover{opacity:.88}
+button.go:disabled{opacity:.4;cursor:default}
+button.more{display:block;margin:18px auto 0;font:inherit;font-size:13.5px;padding:7px 17px;border-radius:999px;
+  border:1px solid var(--line2);background:var(--panel);color:var(--ink2);cursor:pointer}
+button.more:hover{border-color:var(--ink);color:var(--ink)}
+.count{color:var(--ink3);font-size:13px}
+.outcome{display:flex;gap:8px;margin:4px 0 0}
+a.back{font-size:13.5px;color:var(--ink2);text-decoration:none;border:1px solid var(--line2);border-radius:999px;padding:6px 14px}
+a.back:hover{border-color:var(--ink);color:var(--ink)}
+.taskid{font-size:15px;font-weight:600;margin:6px 0 8px;word-break:break-all}
+
+/* ---------- blog ---------- */
+.article{max-width:860px;margin:0 auto;font-size:16px;line-height:1.7}
+/* the header may run a little wider than the text column so the larger title keeps its two lines */
+.article header{margin:8px -60px 38px;text-align:center}
+.article h1{font-size:38px;line-height:1.25;letter-spacing:-.025em;margin:0 0 14px;font-weight:700}
+.article h1 .sub{display:block;font-size:26px;font-weight:600;letter-spacing:-.015em;margin-top:6px}  /* subtitle: smaller so it sits on one line, as in the paper's title */
+@media(max-width:1000px){.article header{margin:8px 0 38px}}
+.article .meta{color:var(--ink3);font-size:14px;margin:0;text-align:center}
+.article .meta a{color:var(--blue-d);text-decoration:none}
+.article .meta a:hover{text-decoration:underline}
+.article h2{font-size:22px;letter-spacing:-.02em;text-transform:none;color:var(--ink);margin:40px 0 12px;font-weight:650}
+.article p{text-align:justify;text-justify:inter-word;hyphens:auto;margin:0 0 16px;color:var(--ink)}
+.article p a{color:var(--blue-d)}
+.article .katex-display{margin:14px 0 16px;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.article .katex{font-size:1.04em}
+.article figure{margin:24px 0 28px}
+.article figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.article figcaption,.article .tcap{text-align:justify;hyphens:auto;color:var(--ink2);font-size:14px;line-height:1.55;margin:10px 0 0}
+.article .tcap{margin:26px 0 10px}
+.article .card{margin-bottom:16px}
+.btab th,.btab td{font-size:13px;padding:8px 14px}
+.btab td b{font-weight:650}
+.btab .d{font-size:11.5px;font-weight:600;white-space:nowrap}
+.btab .d.up{color:var(--good)} .btab .d.dn{color:var(--bad)}
+.article pre.cite{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;font-size:12.5px;line-height:1.55;margin:0 0 40px}
+
+/* ---------- turn bar: one chip per turn, sticky under the top bar ---------- */
+.turnbar{position:sticky;top:56px;z-index:10;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow);margin:14px 0 4px;padding:8px 12px 6px}
+.turnbar .legend{margin:0 0 6px}
+.turnbar .chips{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.chip{flex:0 0 auto;min-width:36px;padding:4px 7px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+  font:inherit;font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink2);cursor:pointer;text-align:center;line-height:1.3}
+.chip:hover{border-color:var(--ink)}
+.chip.fail{background:#fbf0f2;border-color:#f0d3da;color:var(--bad)}
+.chip.fail b{font-weight:700;margin-left:3px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.fail.on{background:var(--bad);border-color:var(--bad);color:#fff}
+
+/* ---------- turn cards ---------- */
+.turncard{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:16px 0;overflow:hidden;box-shadow:var(--shadow);scroll-margin-top:124px}
+.turnhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:11px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tag{font-size:11.5px;padding:3px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink2)}
+.tag.win{background:#eef7f1;border-color:#cfe7d9;color:var(--good)}
+.tag.lose{background:#fbf0f2;border-color:#f0d3da;color:var(--bad)}
+.tag.skip{background:#fdf4e8;border-color:#f0e0c4;color:var(--yellow-d)}
+.blk{border-top:1px solid var(--line)}
+.turnhead + .blk{border-top:0}
+.blk .lab{padding:8px 16px 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.blk pre{margin:0;padding:4px 16px 12px;white-space:pre-wrap;word-break:break-word;max-height:360px;overflow:auto;font-size:12.5px}
+.blk.why pre{font-family:inherit;font-size:13px;color:var(--ink)}
+.blk.cmd pre{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--blue-d)}
+.blk.obs pre{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink2);background:var(--surface)}
+details.prompt{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:16px 0;overflow:hidden}
+details.prompt summary{cursor:pointer;padding:11px 16px;background:var(--surface);font-weight:600;font-size:13px}
+details.prompt[open] summary{border-bottom:1px solid var(--line)}
+details.prompt .blk pre{max-height:none}
+.kvgrid{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 20px;padding:12px 16px 14px;font-size:13px}
+.kvgrid .k{color:var(--ink3);white-space:nowrap}
+.kvgrid .v{word-break:break-word;font-variant-numeric:tabular-nums}
+pre.diff{margin:0;padding:10px 0 14px;overflow-x:auto;font-size:12px;line-height:1.55}
+pre.diff span{display:block;width:max-content;min-width:100%;padding:0 16px;white-space:pre}
+pre.diff .add{background:#eef7f1;color:#1f5f3a}
+pre.diff .del{background:#fbf0f2;color:#9b3048}
+pre.diff .hunk{color:var(--blue-d)}
+pre.diff .file{color:var(--ink);font-weight:600;background:var(--surface)}
+ul.tests{margin:0;padding:10px 16px 14px 36px;font-size:12px;max-height:480px;overflow:auto}
+ul.tests li{word-break:break-all}
+
+/* ---------- candidates ---------- */
+.cgrid{display:grid;gap:0}
+.cgrid.k1{grid-template-columns:1fr}
+.cgrid.k2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cgrid.k3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cgrid.k4{grid-template-columns:repeat(4,minmax(0,1fr))}
+/* each candidate spans the same rows of the grid, so thinking and command start level across candidates */
+.cand{padding:14px 16px;border-right:1px solid var(--line);position:relative;min-width:0;
+  display:grid;grid-template-rows:subgrid;row-gap:12px;align-content:start}
+.cand:last-child{border-right:0}
+.cand.chosen{background:#f6fbf8}
+.cand .chd{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cand .clab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;font-weight:600}
+.cand .cpart + .cpart{margin-top:10px}
+.cand .why.none{color:var(--ink3)}
+.cand .idx{font-size:11.5px;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase}
+.check{width:17px;height:17px;border-radius:50%;display:inline-grid;place-items:center;font-size:11px;
+  background:var(--green-d);color:#fff;font-weight:700}
+.cand .cmd{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;
+  white-space:pre-wrap;word-break:break-word;max-height:150px;overflow:auto;margin:0}
+.cand .why{color:var(--ink2);font-size:12.5px;white-space:pre-wrap;word-break:break-word;max-height:190px;overflow:auto;margin:0}
+.nll{display:grid;grid-template-columns:auto 1fr auto;gap:6px 9px;align-items:center;margin:0;font-size:12px}
+.nll .lab{color:var(--ink3)}
+.nll .track{height:6px;background:var(--surface);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.nll .track i{display:block;height:100%;background:var(--blue)}
+.nll .track.priv i{background:var(--green-d)}
+.nll .val{font-variant-numeric:tabular-nums;color:var(--ink2)}
+.scorewrap{padding:10px 16px 12px;border-bottom:1px solid var(--line);overflow-x:auto}
+.scoretab{width:auto;min-width:min(520px,100%)}
+.scoretab th,.scoretab td{padding:4px 14px;font-size:12.5px;border-bottom:1px solid var(--line)}
+.scoretab th{font-size:11px}
+.scoretab td.win,.scoretab th.win{background:#f6fbf8}
+.scoretab td b{font-weight:650}
+.scoretab small{color:var(--ink3);font-size:11px;margin-left:4px}
+.scoretab tr.sum td{border-top:1px solid var(--line2)}
+.scoretab tr.main td{font-weight:650}
+.legend{color:var(--ink3);font-size:12.5px;margin:6px 0 0}
+.legend.pad{padding:10px 16px;margin:0}
+
+#v-overview,#v-tasks,#v-traj{padding-bottom:72px}
+.hidden{display:none}
+@media(max-width:1000px){.models{grid-template-columns:repeat(2,1fr)}.cgrid.k4,.cgrid.k3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.wrap{padding:0 16px}.models{grid-template-columns:1fr}
+  .topbar .wrap{gap:10px}.bname{display:none}.topbar nav button{padding:7px 10px}
+  .cgrid.k2,.cgrid.k3,.cgrid.k4{grid-template-columns:1fr}.cand{border-right:0;border-bottom:1px solid var(--line)}
+  input{min-width:0}}
+
+/* the hero is shown on the Overview only */
+.hero.hidden{display:none}

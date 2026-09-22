@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+runs/
+data/assets/
+data/deepswe/
+training/data/
+training/checkpoints/
+.env
+build/
+dist/
+.pytest_cache/
+.build_cache.json
+
+# macOS
+.DS_Store
