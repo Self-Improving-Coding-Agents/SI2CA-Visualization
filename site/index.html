@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="data-root" content="../">
+<meta name="data-version" content="68c8d9a9ef">
+<title>(Self-Improving)² Coding Agents — results</title>
+<link rel="stylesheet" href="style.css?v=228a5b29f3">
+<link rel="stylesheet" href="katex/katex.min.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><img class="logo" src="logo.png" alt=""><span class="bname">(Self-Improving)² Coding Agents</span></span>
+  <span class="spacer"></span>
+  <nav id="tabs">
+    <button data-v="overview" class="on">Overview</button>
+    <button data-v="blog">Blog</button>
+    <button data-v="traj">Trajectory</button>
+  </nav>
+</div></div>
+
+<div class="hero"><div class="wrap">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span>
+  <h1>Curating High-Quality Trajectories via Recursive Self-Improvement</h1>
+  <p>Two approaches for turn-level self-improvement in coding agents, evaluated across 4 models and
+     3 benchmarks. The overview summarizes the results, while trajectories are visualized turn by
+     turn, showing every candidate and its corresponding score.</p>
+</div></div>
+
+<section class="block" id="promo"><div class="wrap">
+  <div class="promo"><video controls preload="metadata" playsinline poster="promo_poster.jpg">
+    <source src="promo.mp4" type="video/mp4">
+    Your browser does not play embedded video; <a href="promo.mp4">download the video</a> instead.
+  </video></div>
+</div></section>
+
+<section class="block" id="pickers"><div class="wrap">
+  <h2>Model</h2>
+  <div class="models" id="models"></div>
+  <h2 style="margin-top:28px">Benchmark</h2>
+  <div class="pills" id="benches"></div>
+</div></section>
+
+<section class="block" id="v-overview"><div class="wrap">
+  <h3 id="pairTitle"></h3>
+  <div class="strats" id="strats"></div>
+  <h2 style="margin-top:38px">Summary</h2>
+  <div class="card scroll"><table id="summary"></table></div>
+</div></section>
+
+<section class="block hidden" id="v-blog"><div class="wrap"><article class="article">
+  <header>
+    <h1>(Self-Improving)² Coding Agents:<br><span class="sub">Curating High-Quality Trajectories via Recursive Self-Improvement</span></h1>
+    <p class="meta">September 11, 2026 ·
+      <a href="https://github.com/Self-Improving-Coding-Agents/SI2CA/blob/main/reports/SI2CA-Technical-Report.pdf">Paper</a> ·
+      <a href="https://github.com/Self-Improving-Coding-Agents/SI2CA">Code</a> ·
+      <a href="https://huggingface.co/datasets/Self-Improving-Coding-Agents/SI2CA-Training-Trajectories">Data</a> ·
+      <a href="https://github.com/Self-Improving-Coding-Agents/SI2CA-Visualization">Visualization</a> ·
+      <a href="#" data-goto="overview">Results</a> ·
+      <a href="#" data-goto="traj">Trajectories</a></p>
+  </header>
+
+  <h2>1. Introduction</h2>
+  <p>Training capable coding agents needs repository-level tasks with executable environments and solution
+    trajectories. Task construction has been scaled up considerably, but effective trajectories remain scarce:
+    even rollouts that end in a correct patch often contain intermediate failures, ineffective actions and
+    repeated trial and error. In this work, <b>we study how to curate accurate and concise trajectories with a single backend
+    model</b>.</p>
+  <p>We propose (Self-Improving)² Coding Agents, which applies
+    self-improvement for trajectory generation at two levels. At the turn level, the model samples several candidate actions, evaluates them itself
+    and executes only the best one, using <b>Self-Judgement (SJ) or Self-Likelihood (SL)</b>. At the meta
+    level, a <b>recursive self-improvement (RSI) framework</b> refines the self-improvement strategy itself, deciding when and how to
+    branch so that the same benefit is obtained at lower compute.</p>
+  <p>On SWE-bench Pro, SJ and SL raise the resolve rate of <b>Qwen3.5-122B-A10B from 48.0% to 58.5% and 53.8%</b>.
+    On DeepSWE v1.1, SJ raises <b>GPT-5.6-Terra from 64.4% to 67.5%</b> while cutting the mean number of turns from
+    59.3 to 52.3. An early-commitment window strategy found by the RSI framework matches the resolve rate of every-turn SJ with 31.5% of its additional
+    compute. The trajectories curated by our self-improvement strategies also make better training data: a Qwen3.5-35B-A3B-Base student
+    fine-tuned on them resolves 4.2% more of the Python tasks of SWE-bench Pro than one trained on standard
+    rollouts, with more concise trajectories.</p>
+  <figure>
+    <img src="method.png" alt="Overview of the method: turn-level candidate selection with Self-Judgement and Self-Likelihood, and the recursive self-improvement (RSI) framework">
+    <figcaption>Figure 1. Overview of the (Self-Improving)² Coding Agents. At each turn the policy proposes several candidates and the
+      same model selects one, either by self-judging the candidates against a rubric (a) or by their likelihood under
+      privileged information (b). The RSI framework of Proposer, Executor and Recorder refines the
+      self-improvement strategy itself (c).</figcaption>
+  </figure>
+
+  <h2>2. Self-Judgement</h2>
+  <p>A task \(x\) consists of a problem statement, a repository and its execution environment. The agent solves
+    it over turns: at turn \(t\) the policy \(\pi_\theta\) emits an action \(a_t\), a reasoning trace followed
+    by a command, the environment returns an observation \(o_t\), and the pair is appended to the trajectory
+    prefix \(\tau_{&lt;t}\). Under self-judgement the policy first samples \(k\) candidates from the same
+    unprivileged context as standard generation,
+    \[ a_t^{(1)}, \dots, a_t^{(k)} \;\overset{\text{i.i.d.}}{\sim}\; \pi_\theta(\,\cdot \mid x, \tau_{&lt;t}). \]
+    The same model then acts as the judge. <b>Prompted with the problem statement, the prefix, the candidate, the
+    privileged information \(z\) and a rubric \(R = \{r_1, \dots, r_m\}\), it returns one score per rubric item,</b>
+    \[ s^{(i)} = \bigl(s_1^{(i)}, \dots, s_m^{(i)}\bigr) \sim \pi_\theta\bigl(\,\cdot \mid P_{\text{judge}}(x, \tau_{&lt;t}, a_t^{(i)}, z, R)\bigr), \qquad s_j^{(i)} \in [0, 1], \]
+    where the items cover the quality of the reasoning, the soundness of the proposed action and the alignment of
+    the candidate with \(z\). The rubric score of a candidate is the weighted sum of its items, with weights
+    \(w_j \ge 0\) and \(\sum_j w_j = 1\), and the candidate with the highest score is executed:
+    \[ J\bigl(a_t^{(i)}\bigr) = \sum_{j=1}^{m} w_j\, s_j^{(i)}, \qquad i^\star = \arg\max_{i \in [k]} J\bigl(a_t^{(i)}\bigr). \]
+    The observation returned for \(a_t^{(i^\star)}\) is appended to the prefix and the next turn starts from
+    there. <b>The privileged information, the reference solution in our experiments, is visible only to the judge.</b> It never
+    enters the generation context, so a curated trajectory has the same form as a standard turn-by-turn rollout
+    and can be used directly for distillation or reinforcement learning. In
+    our experiments SJ draws \(k = 2\) candidates per turn, averages \(n = 3\) judgements per candidate to reduce
+    the variance of the scores, and gives the alignment with the privileged information a rubric weight of 0.30,
+    with the remaining 0.70 distributed over the reasoning and action items.</p>
+
+  <h2>3. Self-Likelihood</h2>
+  <p>Self-likelihood replaces the generative judge with
+    a likelihood test that generates no tokens. The intuition is that once the model is given the privileged
+    information, it should assign the highest confidence to the candidate that is heading in the right direction.
+    <b>We therefore score each candidate by the length-normalised log-likelihood the same model assigns to it once
+    \(z\) is inserted into the context, and execute the candidate with the highest value</b>:
+    \[ \ell\bigl(a_t^{(i)}\bigr) = \frac{1}{\lvert a_t^{(i)} \rvert} \sum_{u=1}^{\lvert a_t^{(i)} \rvert} \log \pi_\theta\bigl(a_{t,u}^{(i)} \mid x, z, \tau_{&lt;t}, a_{t,&lt;u}^{(i)}\bigr), \qquad i^\star = \arg\max_{i \in [k]} \ell\bigl(a_t^{(i)}\bigr), \]
+    where \(a_{t,u}^{(i)}\) is the \(u\)-th token of the candidate. Equivalently, the candidate with the lowest
+    per-token negative log-likelihood under the privileged context wins. </p>
+  <p><b>Computing \(\ell\) takes a single forward pass and the \(k\) passes share
+    the prefix, so selection adds little on top of generating the candidates.</b> SL uses a hint derived from the
+    gold patch and the problem statement as privileged information, inserted right after the problem statement,
+    and draws \(k = 4\) candidates per turn. As with SJ, \(z\) is used only for scoring: the candidates
+    themselves are generated without it, and the trajectory that is kept contains no hints. </p>
+
+  <h2>4. Recursive Self-Improvement Framework for Strategy Optimization</h2>
+  <p>Branching at every turn is wasteful: many turns are effectively deterministic, and about 18% of branched
+    candidates are functionally equivalent. We therefore treat the self-improvement strategy itself as the object
+    to optimise. <b>A strategy has two parts: a branching rule that decides at each turn whether to branch and how
+    many candidates to draw, and a self-improvement strategy, SJ or SL.</b> The branching rule may only use behavioural signals
+    available at the turn, such as exit codes, whether an edit has been made or repeated commands, and never the
+    identity of the task, which keeps the searched strategy from memorising the validation tasks.</p>
+  <p>The RSI framework runs in cycles over three agents. A <b>Proposer</b> reads the history of earlier cycles and a sample of
+    anonymised trajectories and writes one candidate strategy; an <b>Executor</b>, the policy model itself, generates
+    trajectories with that strategy on a validation split; a <b>Recorder</b> summarises the outcome and appends it to the
+    history, whether the proposal was accepted or not. A proposal replaces the incumbent only if it solves at
+    least δ = 7 more validation tasks, or keeps the solved count within ε = 2 tasks while shortening the
+    trajectories by at least 10% in tokens or turns. The Proposer and Recorder are frontier models, Claude Opus 5
+    and GPT-5.6-Sol; the validation split holds 192 tasks from SWE-bench Multilingual, which the Proposer never
+    sees.</p>
+  <p>Over 15 cycles the strategy accepted at cycle 6 remained the best: <b>an early-commitment window that branches
+    with <i>k</i> = 2 from the first observation until the third file-mutating command</b>, then follows
+    a single path. Its premise is that the early decisions determine a trajectory, while after the third edit the
+    model proceeds well on its own.</p>
+
+  <h2>5. Experiments</h2>
+  <p>All experiments use the mini-SWE-agent harness with Bash as the only tool. We report the resolve rate and the mean, median and 90th percentile of the number of turns per
+    trajectory; parentheses give the change against the standard strategy of the same model.</p>
+
+<p class="tcap" style="text-align: center;">Table 1. Qwen3.5-122B-A10B on SWE-bench Verified (500 tasks) and SWE-bench Pro (731 tasks).</p>
+  <div class="card scroll"><table class="btab">
+    <thead><tr><th>Strategy</th><th class="num">Verified</th><th class="num">Pro</th><th class="num">Turns, Verified</th><th class="num">Turns, Pro</th></tr></thead>
+    <tbody>
+      <tr><td>Standard</td><td class="num">67.0</td><td class="num">48.0</td><td class="num">72.1 / 64 / 122</td><td class="num">84.6 / 80 / 135</td></tr>
+      <tr><td>Self-judgement</td><td class="num"><b>71.0</b> <span class="d up">↑4.0</span></td><td class="num"><b>58.5</b> <span class="d up">↑10.5</span></td>
+        <td class="num"><b>68.8</b> <span class="d up">↓3.3</span> / <b>61</b> <span class="d up">↓3</span> / <b>116</b> <span class="d up">↓6</span></td>
+        <td class="num">80.2 <span class="d up">↓4.4</span> / 74 <span class="d up">↓6</span> / 130 <span class="d up">↓5</span></td></tr>
+      <tr><td>Self-likelihood</td><td class="num">69.8 <span class="d up">↑2.8</span></td><td class="num">53.8 <span class="d up">↑5.8</span></td>
+        <td class="num">69.5 <span class="d up">↓2.6</span> / 62 <span class="d up">↓2</span> / 118 <span class="d up">↓4</span></td>
+        <td class="num"><b>69.9</b> <span class="d up">↓14.7</span> / <b>64</b> <span class="d up">↓16</span> / <b>117</b> <span class="d up">↓18</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>Self-judgement improves the resolve rate on both benchmarks, with the largest gain on the harder Pro
+    benchmark, and condenses the trajectories at the same time. Self-likelihood, which needs no judge completions,
+    also improves the Pro resolve rate by 5.8 points and produces the most concise trajectories on Pro, with the
+    mean number of turns falling from 84.6 to 69.9.</p>
+
+  <p class="tcap">Table 2. GPT-5.6 models on DeepSWE v1.1 (113 tasks). The Terra rows are averaged over four
+    independent runs of the full benchmark; the Luna rows come from a single run. The API does not expose
+    token-level probabilities, so self-likelihood cannot be evaluated on these models.</p>
+  <div class="card scroll"><table class="btab">
+    <thead><tr><th>Model</th><th>Strategy</th><th class="num">Resolve rate</th><th class="num">Turns</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2">GPT-5.6-Luna-Max</td><td>Standard</td><td class="num">60.2</td><td class="num">246.8 / 173 / 465</td></tr>
+      <tr><td>Self-judgement</td><td class="num"><b>64.6</b> <span class="d up">↑4.4</span></td><td class="num"><b>223.0</b> <span class="d up">↓23.8</span> / <b>150</b> <span class="d up">↓23</span> / 474 <span class="d dn">↑9</span></td></tr>
+      <tr><td rowspan="2">GPT-5.6-Terra-xHigh</td><td>Standard</td><td class="num">64.4 ± 2.0</td><td class="num">59.3 / 52 / 98</td></tr>
+      <tr><td>Self-judgement</td><td class="num"><b>67.5</b> ± 2.5 <span class="d up">↑3.1</span></td><td class="num"><b>52.3</b> <span class="d up">↓7.0</span> / <b>46</b> <span class="d up">↓6</span> / <b>86</b> <span class="d up">↓12</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>The effect carries over to frontier models. Self-judgement raises the resolve rate of Terra from 64.4% to
+    67.5% while reducing the mean number of turns from 59.3 to 52.3, and raises Luna from 60.2% to 64.6% with the
+    mean number of turns falling from 246.8 to 223.0.</p>
+
+  <p class="tcap">Table 3. Standard generation, every-turn self-judgement and the strategy discovered by the
+    RSI framework on Qwen3.5-122B-A10B. None of these tasks were seen during the search. The branching cost
+    counts the additional candidates and generated tokens beyond the executed trajectory.</p>
+  <div class="card scroll"><table class="btab">
+    <thead><tr><th>Benchmark</th><th>Strategy</th><th class="num">Resolve rate</th><th class="num">Turns</th><th class="num">Extra candidates</th><th class="num">Extra tokens</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3">SWE-bench Verified</td><td>Standard</td><td class="num">67.0</td><td class="num">72.1 / 64 / 122</td><td class="num">–</td><td class="num">–</td></tr>
+      <tr><td>Full self-judgement</td><td class="num">71.0 <span class="d up">↑4.0</span></td><td class="num"><b>68.8</b> <span class="d up">↓3.3</span> / <b>61</b> <span class="d up">↓3</span> / <b>116</b> <span class="d up">↓6</span></td><td class="num">34,393</td><td class="num">7.8M</td></tr>
+      <tr><td>Discovered strategy</td><td class="num"><b>71.2</b> <span class="d up">↑4.2</span></td><td class="num">71.9 <span class="d up">↓0.2</span> / 65 <span class="d dn">↑1</span> / 120 <span class="d up">↓2</span></td><td class="num">9,633 <span class="d up">↓72.0%</span></td><td class="num">2.1M <span class="d up">↓73.1%</span></td></tr>
+      <tr><td rowspan="3">SWE-bench Pro (Python)</td><td>Standard</td><td class="num">55.3</td><td class="num">78.9 / 74 / 126</td><td class="num">–</td><td class="num">–</td></tr>
+      <tr><td>Full self-judgement</td><td class="num"><b>65.4</b> <span class="d up">↑10.1</span></td><td class="num">77.6 <span class="d up">↓1.3</span> / 71 <span class="d up">↓3</span> / 124 <span class="d up">↓2</span></td><td class="num">20,642</td><td class="num">4.7M</td></tr>
+      <tr><td>Discovered strategy</td><td class="num">60.6 <span class="d up">↑5.3</span></td><td class="num"><b>73.3</b> <span class="d up">↓5.6</span> / <b>67</b> <span class="d up">↓7</span> / 124 <span class="d up">↓2</span></td><td class="num">7,728 <span class="d up">↓62.6%</span></td><td class="num">1.8M <span class="d up">↓61.7%</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>On Verified the discovered strategy matches full self-judgement (71.2% against 71.0%) while branching at only
+    28% of the turns and generating 9,633 additional candidates instead of 34,393. On the Python subset of Pro it
+    keeps a clear gain over the standard baseline, from 55.3% to 60.6%, at roughly one third of the branching cost,
+    and produces more concise trajectories than every-turn self-judgement.</p>
+
+  <p class="tcap">Table 4. Data curation evaluated through supervised fine-tuning. Qwen3.5-35B-A3B-Base is
+    fine-tuned on trajectories generated by Qwen3.5-122B-A10B on 10,780 Python tasks from SWE-smith and
+    SWE-rebench under three curation settings, with the same recipe for every student. The three trajectory sets are released on Hugging Face as
+    <a href="https://huggingface.co/datasets/Self-Improving-Coding-Agents/SI2CA-Training-Trajectories">SI2CA-Training-Trajectories</a>.</p>
+  <div class="card scroll"><table class="btab">
+    <thead><tr><th>Student</th><th class="num">Verified</th><th class="num">Pro (Python)</th><th class="num">Turns, Verified</th><th class="num">Turns, Pro (Python)</th></tr></thead>
+    <tbody>
+      <tr><td>Qwen3.5-35B-A3B-Base</td><td class="num">24.0</td><td class="num">12.4</td><td class="num">33.7 / 28 / 64</td><td class="num">41.6 / 32 / 79</td></tr>
+      <tr><td>SFT on standard trajectories</td><td class="num">57.4</td><td class="num">46.2</td><td class="num">91.1 / 76 / 172</td><td class="num">93.8 / 80 / 179</td></tr>
+      <tr><td>SFT on full self-judgement</td><td class="num"><b>59.6</b> <span class="d up">↑2.2</span></td><td class="num"><b>50.4</b> <span class="d up">↑4.2</span></td><td class="num"><b>83.4</b> <span class="d up">↓7.7</span> / <b>72</b> <span class="d up">↓4</span> / <b>140</b> <span class="d up">↓32</span></td><td class="num"><b>86.6</b> <span class="d up">↓7.2</span> / <b>75</b> <span class="d up">↓5</span> / <b>159</b> <span class="d up">↓20</span></td></tr>
+      <tr><td>SFT on discovered strategy</td><td class="num">58.6 <span class="d up">↑1.2</span></td><td class="num"><b>50.4</b> <span class="d up">↑4.2</span></td><td class="num">95.8 <span class="d dn">↑4.7</span> / 82 <span class="d dn">↑6</span> / 175 <span class="d dn">↑3</span></td><td class="num">92.8 <span class="d up">↓1.0</span> / 79 <span class="d up">↓1</span> / 170 <span class="d up">↓9</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>Trajectories curated by self-judgement make better training data than standard rollouts: the student
+    trained on them resolves 2.2 points more on Verified and 4.2 points more on Pro (Python), and its trajectories are
+    shorter on both benchmarks. The student trained on trajectories from the discovered strategy reaches the same
+    gain on Pro at a lower curation cost.</p>
+
+  <h2>Citation</h2>
+<pre class="cite mono">@misc{liang2026si2ca,
+  author = {{SI2CA Contributors}},
+  title  = {{(Self-Improving)$^2$ Coding Agents: Curating High-Quality Trajectories via Recursive Self-Improvement}},
+  year   = {2026},
+  url    = {https://github.com/Self-Improving-Coding-Agents/SI2CA}
+}</pre>
+</article></div></section>
+
+<section class="block hidden" id="v-traj"><div class="wrap">
+  <h3>Trajectory</h3>
+  <p class="lead" id="trajLead"></p>
+  <div id="trajlist">
+    <div class="controls">
+      <label>Strategy <select id="trajstrat"></select></label>
+      <label>Outcome <select id="trajoutcome">
+        <option value="">all</option><option value="1">resolved</option><option value="0">unresolved</option></select></label>
+      <label>Find <input id="trajq" placeholder="instance id, repo or language"></label>
+      <span class="count" id="trajcount"></span>
+    </div>
+    <div id="trajstats"></div>
+    <div class="card scroll tasks"><table id="tasktable"></table></div>
+  </div>
+  <div id="trajview" class="hidden">
+    <div class="controls">
+      <a class="back" id="trajback" href="#">← All tasks</a>
+      <span class="count" id="trajstatus"></span>
+    </div>
+    <h4 class="taskid mono" id="trajtitle"></h4>
+    <div id="trajbody"></div>
+  </div>
+</div></section>
+
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<script>
+  // formulas in the blog are written in TeX between \( \) and \[ \]
+  renderMathInElement(document.getElementById('v-blog'), {
+    delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+    throwOnError: false
+  });
+</script>
+<script src="app.js?v=108f49eee7"></script>
+</body>
+</html>
